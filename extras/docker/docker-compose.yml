@@ -1,0 +1,63 @@
+version: "3.5"
+services:
+  keyrock:
+    restart: always
+    image: fiware/idm:7.7.0
+    container_name: fiware-keyrock
+    hostname: keyrock
+    networks:
+      default:
+        ipv4_address: 172.18.1.5
+    depends_on:
+      - mysql-db
+    ports:
+    #  - "3000:3000"
+      - "443:443"
+    #Need for HTTPS      
+    volumes:
+      - ./certs/idm-2018-cert.pem:/opt/fiware-idm/certs/idm-2018-cert.pem
+      - ./certs/idm-2018-key.pem:/opt/fiware-idm/certs/idm-2018-key.pem
+    environment:
+      - DEBUG=idm:*
+      - IDM_DB_HOST=mysql-db
+      - IDM_HOST=http://155.54.99.118:3000
+      - IDM_PORT=3000
+      # Development use only 
+      # Use Docker Secrets for Sensitive Data
+      - IDM_DB_PASS=secret 
+      - IDM_DB_USER=root
+      - IDM_ADMIN_USER=admin
+      - IDM_ADMIN_EMAIL=admin@test.com
+      - IDM_ADMIN_PASS=1234
+      #Need for HTTPS
+      - IDM_HTTPS_ENABLED=true
+      - IDM_HTTPS_PORT=443
+
+
+  mysql-db:
+    restart: always
+    image: mysql:5.7
+    hostname: mysql-db
+    container_name: db-mysql
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    networks:
+      default:
+        ipv4_address: 172.18.1.6
+    environment:
+      # Development use only 
+      # Use Docker Secrets for Sensitive Data
+      - "MYSQL_ROOT_PASSWORD=secret"
+      - "MYSQL_ROOT_HOST=172.18.1.5"
+    volumes:
+      - mysql-db:/var/lib/mysql
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.18.1.0/24
+volumes:
+  mysql-db: ~
