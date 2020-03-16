@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: keyrock-ingress
+  labels:
+    app: {{ template "appname" . }}
+    service: keyrock
+    track: "{{ .Values.application.track }}"
+    tier: "{{ .Values.application.tier }}"
+    release: {{ .Release.Name }}
+spec:
+  backend:
+    serviceName: keyrock
+    servicePort: 9090

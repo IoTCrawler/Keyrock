@@ -1,0 +1,7 @@
+name: keyrock
+description: Fiware IDM component
+version: 7.8.1
+keywords:
+  - Fiware IDM
+sources:
+home:

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "trackableappname" . }}
+  annotations:
+    {{ if .Values.gitlab.app }}app.gitlab.com/app: {{ .Values.gitlab.app | quote }}{{ end }}
+    {{ if .Values.gitlab.env }}app.gitlab.com/env: {{ .Values.gitlab.env | quote }}{{ end }}
+  labels:
+    app: {{ template "appname" . }}
+    track: "{{ .Values.application.track }}"
+    tier: "{{ .Values.application.tier }}"
+    release: {{ .Release.Name }}
+    service: keyrock
+spec:
+{{- if or .Values.enableSelector (eq (default "extensions/v1beta1" .Values.deploymentApiVersion) "apps/v1") }}
+  selector:
+    matchLabels:
+      app: {{ template "appname" . }}
+      track: "{{ .Values.application.track }}"
+      tier: "{{ .Values.application.tier }}"
+      release: {{ .Release.Name }}
+      service: keyrock
+{{- end }}
+  replicas: {{ .Values.replicaCount }}
+{{- if .Values.strategyType }}
+  strategy:
+    type: {{ .Values.strategyType | quote }}
+{{- end }}
+  template:
+    metadata:
+      annotations:
+        checksum/application-secrets: "{{ .Values.application.secretChecksum }}"
+        {{ if .Values.gitlab.app }}app.gitlab.com/app: {{ .Values.gitlab.app | quote }}{{ end }}
+        {{ if .Values.gitlab.env }}app.gitlab.com/env: {{ .Values.gitlab.env | quote }}{{ end }}
+{{- if .Values.podAnnotations }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
+{{- end }}
+      labels:
+        app: {{ template "appname" . }}
+        track: "{{ .Values.application.track }}"
+        tier: "{{ .Values.application.tier }}"
+        release: {{ .Release.Name }}
+        service: keyrock
+    spec:
+      imagePullSecrets:
+{{ toYaml .Values.image.secrets | indent 10 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.application.secretName }}
+        envFrom:
+        - secretRef:
+            name: {{ .Values.application.secretName }}
+        {{- end }}
+        ports:
+        - name: "{{ .Values.service.name }}"
+          containerPort: {{ .Values.service.internalPort }}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+      restartPolicy: Always
+      enableServiceLinks: false
+status: {}
