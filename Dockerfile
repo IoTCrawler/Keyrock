@@ -110,6 +110,7 @@ RUN apt-get update && \
     sed -i 's/inet_interfaces = all/inet_interfaces = loopback-only/g' /etc/postfix/main.cf
 
 
+COPY . /opt/fiware-idm
 
 WORKDIR /opt/fiware-idm
 
@@ -125,6 +126,7 @@ RUN npm cache clean -f   && \
 
 # For local development, when running the Dockerfile from the root of the repository
 # use the following commands to configure Keyrock, the database and add an entrypoint:
+
 COPY extras/docker/config_database.js  extras/docker/config_database.js
 COPY extras/docker/config.js.template  extras/docker/config.js
 COPY extras/docker/docker-entrypoint.sh /opt/fiware-idm/docker-entrypoint.sh
