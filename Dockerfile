@@ -126,6 +126,7 @@ RUN npm cache clean -f   && \
 
 # Run Idm Keyrock
 RUN cp extras/docker/docker-entrypoint.sh ./ && \
+    cp extras/docker/config.js.template ./config.js && \
     chmod 755 docker-entrypoint.sh
 
 ENTRYPOINT ["/opt/fiware-idm/docker-entrypoint.sh"]
