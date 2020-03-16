@@ -125,9 +125,10 @@ RUN npm cache clean -f   && \
 
 
 # Run Idm Keyrock
-RUN chmod 755 extras/docker/docker-entrypoint.sh
+RUN cp extras/docker/docker-entrypoint.sh ./ && \
+    chmod 755 docker-entrypoint.sh
 
-ENTRYPOINT ["/opt/fiware-idm/extras/docker/docker-entrypoint.sh"]
+ENTRYPOINT ["/opt/fiware-idm/docker-entrypoint.sh"]
 
 # Ports used by idm
 EXPOSE ${IDM_PORT}

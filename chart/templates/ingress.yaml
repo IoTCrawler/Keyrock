@@ -11,4 +11,4 @@ metadata:
 spec:
   backend:
     serviceName: keyrock
-    servicePort: 9090
+    servicePort: 3000

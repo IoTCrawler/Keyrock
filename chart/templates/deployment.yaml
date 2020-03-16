@@ -53,6 +53,29 @@ spec:
         - secretRef:
             name: {{ .Values.application.secretName }}
         {{- end }}
+        env:
+        - name: DEBUG
+          value: "idm:*"
+        - name: IDM_DB_HOST
+          value: mysql
+        - name: IDM_HOST
+          value: "http://keyrock:3000"
+        - name: IDM_PORT
+          value: "3000"
+        - name: IDM_DB_PASS
+          value: secret
+        - name: IDM_DB_USER
+          value: root
+        - name: IDM_ADMIN_USER
+          value: admin
+        - name: IDM_ADMIN_EMAIL
+          value: "admin@test.com"
+        - name: IDM_ADMIN_PASS
+          value: "1234"
+        - name: IDM_HTTPS_ENABLED
+          value: "true"
+        - name: IDM_HTTPS_PORT
+          value: "443"
         ports:
         - name: "{{ .Values.service.name }}"
           containerPort: {{ .Values.service.internalPort }}

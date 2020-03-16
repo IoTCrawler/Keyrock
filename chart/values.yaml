@@ -34,7 +34,7 @@ service:
   annotations: {}
   name: keyrock
   type: ClusterIP
-  # url: http://my.host.com/
+  # url: http://identity-manager-keyrock.35.241.228.250.nip.io:3000
   additionalHosts:
   commonName:
   externalPort: 3000
@@ -68,7 +68,7 @@ readinessProbe:
   scheme: "HTTP"
   probeType: "httpGet"
 postgresql:
-  enabled: true
+  enabled: false
   managed: false
   managedClassSelector:
     #   matchLabels:
