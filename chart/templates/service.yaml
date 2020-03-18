@@ -1,3 +1,4 @@
+{{- if and (.Values.service.enabled) (eq .Values.application.track "stable") -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -12,10 +13,9 @@ metadata:
 {{- end }}
   labels:
     app: {{ template "appname" . }}
-    service: keyrock
-    track: "{{ .Values.application.track }}"
-    tier: "{{ .Values.application.tier }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -26,3 +26,4 @@ spec:
   selector:
     app: {{ template "appname" . }}
     tier: "{{ .Values.application.tier }}"
+{{- end -}}
