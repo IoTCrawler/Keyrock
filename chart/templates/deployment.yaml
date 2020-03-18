@@ -1,4 +1,5 @@
-apiVersion: apps/v1
+{{- if not .Values.application.initializeCommand -}}
+apiVersion: {{ default "extensions/v1beta1" .Values.deploymentApiVersion }}
 kind: Deployment
 metadata:
   name: {{ template "trackableappname" . }}
@@ -76,13 +77,51 @@ spec:
           value: "true"
         - name: IDM_HTTPS_PORT
           value: "443"
+        - name: GITLAB_ENVIRONMENT_NAME
+          value: {{ .Values.gitlab.envName }}
+        - name: GITLAB_ENVIRONMENT_URL
+          value: {{ .Values.gitlab.envURL }}
         ports:
         - name: "{{ .Values.service.name }}"
           containerPort: {{ .Values.service.internalPort }}
-        - name: "secure web"
+        - name: "keyrock-secure"
           containerPort: 443
+        livenessProbe:
+{{- if eq .Values.livenessProbe.probeType "httpGet" }}
+          httpGet:
+            path: {{ .Values.livenessProbe.path }}
+            scheme: {{ .Values.livenessProbe.scheme }}
+            port: {{ .Values.service.internalPort }}
+{{- else if eq .Values.livenessProbe.probeType "tcpSocket" }}
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+{{- else if eq .Values.livenessProbe.probeType "exec" }}
+          exec:
+            command:
+{{ toYaml .Values.livenessProbe.command | indent 14 }}
+{{- end }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+{{- if eq .Values.readinessProbe.probeType "httpGet" }}
+          httpGet:
+            path: {{ .Values.readinessProbe.path }}
+            scheme: {{ .Values.readinessProbe.scheme }}
+            port: {{ .Values.service.internalPort }}
+{{- else if eq .Values.readinessProbe.probeType "tcpSocket" }}
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+{{- else if eq .Values.readinessProbe.probeType "exec" }}
+          exec:
+            command:
+{{ toYaml .Values.readinessProbe.command | indent 14 }}
+{{- end }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.resources | indent 12 }}
       restartPolicy: Always
       enableServiceLinks: false
 status: {}
+{{- end -}}
+

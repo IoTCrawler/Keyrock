@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+apiVersion: {{ default "extensions/v1beta1" .Values.deploymentApiVersion }}
 kind: Deployment
 metadata:
   annotations:

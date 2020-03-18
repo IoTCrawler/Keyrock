@@ -23,6 +23,10 @@ spec:
     targetPort: {{ .Values.service.internalPort }}
     protocol: TCP
     name: {{ .Values.service.name }}
+  - port: 443
+    targetPort: 443
+    protocol: TCP
+    name: "keyrock-secure"
   selector:
     app: {{ template "appname" . }}
     tier: "{{ .Values.application.tier }}"

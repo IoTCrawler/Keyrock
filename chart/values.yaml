@@ -37,8 +37,8 @@ service:
   # url: http://identity-manager-keyrock.35.241.228.250.nip.io:3000
   additionalHosts:
   commonName:
-  externalPort: 443
-  internalPort: 443
+  externalPort: 3000
+  internalPort: 3000
 ingress:
   tls:
     enabled: true
@@ -56,13 +56,13 @@ ingress:
 prometheus:
   metrics: false
 livenessProbe:
-  path: "/actuator/health"
+  path: "/"
   initialDelaySeconds: 30
   timeoutSeconds: 10
   scheme: "HTTP"
   probeType: "httpGet"
 readinessProbe:
-  path: "/actuator/health"
+  path: "/"
   initialDelaySeconds: 30
   timeoutSeconds: 10
   scheme: "HTTP"
