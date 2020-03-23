@@ -7,11 +7,11 @@ service:
 
 livenessProbe:
   path: "/"
-  initialDelaySeconds: 14
-  timeoutSeconds: 14
+  initialDelaySeconds: 30
+  timeoutSeconds: 10
   scheme: "HTTPS"
 readinessProbe:
   path: "/"
-  initialDelaySeconds: 4
-  timeoutSeconds: 2
+  initialDelaySeconds: 30
+  timeoutSeconds: 10
   scheme: "HTTPS"
