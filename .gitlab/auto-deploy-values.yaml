@@ -9,9 +9,9 @@ livenessProbe:
   path: "/"
   initialDelaySeconds: 30
   timeoutSeconds: 10
-  scheme: "HTTPS"
+  scheme: "HTTP"
 readinessProbe:
   path: "/"
   initialDelaySeconds: 30
   timeoutSeconds: 10
-  scheme: "HTTPS"
+  scheme: "HTTP"
