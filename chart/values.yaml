@@ -37,8 +37,8 @@ service:
   # url: http://identity-manager-keyrock.35.241.228.250.nip.io:3000
   additionalHosts:
   commonName:
-  externalPort: 443
-  internalPort: 443
+  externalPort: 3000
+  internalPort: 3000
 ingress:
   tls:
     enabled: true
@@ -59,13 +59,13 @@ livenessProbe:
   path: "/"
   initialDelaySeconds: 30
   timeoutSeconds: 10
-  scheme: "HTTPS"
+  scheme: "HTTP"
   probeType: "httpGet"
 readinessProbe:
   path: "/"
   initialDelaySeconds: 30
   timeoutSeconds: 10
-  scheme: "HTTPS"
+  scheme: "HTTP"
   probeType: "httpGet"
 postgresql:
   enabled: false
