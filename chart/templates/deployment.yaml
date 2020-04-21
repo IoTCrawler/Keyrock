@@ -74,7 +74,7 @@ spec:
         - name: IDM_ADMIN_PASS
           value: "1234"
         - name: IDM_HTTPS_ENABLED
-          value: "true"
+          value: "false"
         - name: IDM_HTTPS_PORT
           value: "443"
         - name: GITLAB_ENVIRONMENT_NAME
