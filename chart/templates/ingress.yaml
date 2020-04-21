@@ -53,7 +53,7 @@ spec:
       - path: /
         backend:
           serviceName: {{ template "fullname" . }}
-          servicePort: {{ .Values.service.externalPort }}
+          servicePort: 443 #{{ .Values.service.externalPort }}
 {{- if .Values.service.commonName }}
   - host: {{ template "hostname" .Values.service.commonName }}
     http:
