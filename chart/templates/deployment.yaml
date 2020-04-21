@@ -82,10 +82,8 @@ spec:
         - name: GITLAB_ENVIRONMENT_URL
           value: {{ .Values.gitlab.envURL }}
         ports:
-        - name: "{{ .Values.service.name }}"
-          containerPort: {{ .Values.service.internalPort }}
         - name: "keyrock-secure"
-          containerPort: 443
+          containerPort: {{ .Values.service.internalPort }}
         livenessProbe:
 {{- if eq .Values.livenessProbe.probeType "httpGet" }}
           httpGet:
