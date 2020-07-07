@@ -31,39 +31,23 @@ metadata:
 
 {{- end }}
 spec:
-{{- if .Values.ingress.tls.enabled }}
-  tls:
-  - hosts:
-{{- if .Values.service.commonName }}
-    - {{ template "hostname" .Values.service.commonName }}
-{{- end }}
-    - {{ template "hostname" .Values.service.url }}
-{{- if .Values.service.additionalHosts }}
-{{- range $host := .Values.service.additionalHosts }}
-    - {{ $host }}
-{{- end -}}
-{{- end }}
-    secretName: {{ .Values.ingress.tls.secretName | default (printf "%s-tls" (include "fullname" .)) }}
-{{- end }}
+ - hosts:
+    {{ if eq .Values.gitlab.env "production" }}
+    - keyrock.iotcrawler.eu
+    {{ else }}
+    - staging.keyrock.iotcrawler.eu
+    {{ end }}
+    secretName: keyrock-{{ .Values.gitlab.env }}-tls
   rules:
-  - host: {{ template "hostname" .Values.service.url }}
+  {{ if eq .Values.gitlab.env "production" }}
+  - host: keyrock.iotcrawler.eu
+  {{ else }}
+  - host: staging.keyrock.iotcrawler.eu
+  {{ end }}
     http:
-      &httpRule
       paths:
       - path: /
         backend:
           serviceName: {{ template "fullname" . }}
           servicePort: {{ .Values.service.externalPort }}
-{{- if .Values.service.commonName }}
-  - host: {{ template "hostname" .Values.service.commonName }}
-    http:
-      <<: *httpRule
-{{- end -}}
-{{- if .Values.service.additionalHosts }}
-{{- range $host := .Values.service.additionalHosts }}
-  - host: {{ $host }}
-    http:
-      <<: *httpRule
-{{- end -}}
-{{- end -}}
 {{- end -}}
