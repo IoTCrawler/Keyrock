@@ -31,7 +31,8 @@ metadata:
 
 {{- end }}
 spec:
- - hosts:
+  tls:
+  - hosts:
     {{ if eq .Values.gitlab.env "production" }}
     - keyrock.iotcrawler.eu
     {{ else }}
