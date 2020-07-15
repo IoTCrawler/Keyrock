@@ -1,8 +1,7 @@
-{{- if and (.Values.service.enabled) (eq .Values.application.track "stable") -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "fullname" . }}
+  name: keyrock
   annotations:
 {{- if .Values.service.annotations }}
 {{ toYaml .Values.service.annotations | indent 4 }}
@@ -34,4 +33,3 @@ spec:
     tier: "{{ .Values.application.tier }}"
     release: {{ .Release.Name }}
     service: keyrock
-{{- end -}}
